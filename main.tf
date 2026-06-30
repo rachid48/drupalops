@@ -16,6 +16,9 @@ resource "aws_instance" "web" {
 user_data = <<-EOF
   #!/bin/bash
   set -e
+  export HOME=/root
+  export COMPOSER_ALLOW_SUPERUSER=1
+
   dnf update -y
   dnf install -y httpd php php-cli php-fpm php-mysqlnd php-xml php-mbstring \
     php-curl php-gd php-zip php-bcmath unzip git
@@ -25,15 +28,16 @@ user_data = <<-EOF
 
   mkdir -p /var/www
   cd /var/www
-  composer create-project drupal/recommended-project drupal
+  composer create-project drupal/recommended-project drupal --no-interaction
 
   chown -R apache:apache /var/www/drupal
+  mkdir -p /var/www/drupal/web/sites/default/files
   chmod -R 755 /var/www/drupal/web/sites/default/files
 
   sed -i 's|DocumentRoot "/var/www/html"|DocumentRoot "/var/www/drupal/web"|' /etc/httpd/conf/httpd.conf
 
   systemctl enable httpd
-  systemctl start httpd
+  systemctl restart httpd
 EOF
 
 }
@@ -81,7 +85,7 @@ resource "aws_security_group" "web" {
 
 variable "instance_type" {
   description = "The type of instance to use"
-  default     = "t3.micro"
+  default     = "t3.small"
 }
 
 variable "default_ami" {
