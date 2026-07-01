@@ -19,7 +19,7 @@ resource "aws_subnet" "main" {
 }
 
 /************************
-Data base subnet
+db  subnet
 ************************/
 
 resource "aws_db_subnet_group" "default" {

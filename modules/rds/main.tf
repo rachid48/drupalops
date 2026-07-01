@@ -9,11 +9,9 @@ resource "aws_db_instance" "default" {
   password               = var.db_password
   parameter_group_name   = "default.mysql8.0"
   skip_final_snapshot    = true
-  publicly_accessible    = true
+  publicly_accessible    = false
   vpc_security_group_ids = [aws_security_group.rds.id]
-  db_subnet_group_name   = aws_db_subnet_group.default.name
-
-
+  db_subnet_group_name   = var.db_subnet_group_name
 
   tags = {
     Name = "drupal-rds"
@@ -22,20 +20,18 @@ resource "aws_db_instance" "default" {
   lifecycle {
     prevent_destroy = true
   }
-
 }
 
-
 resource "aws_security_group" "rds" {
-  name        = "drupal-rds-sg"
+  name        = var.sg_name
   description = "Allow MySQL from EC2 only"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.web.id] # Référence SG, pas IP !
+    security_groups = [var.web_sg_id]
   }
 
   egress {
@@ -46,30 +42,6 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "drupal-rds-sg"
+    Name = var.sg_name
   }
-}
-
-variable "db_instance_class" {
-  description = "The type of instance to use"
-  default     = "db.t4g.micro"
-}
-
-variable "db_name" {
-  description = "The name of the database"
-  default     = "drupaldb"
-}
-
-variable "db_username" {
-  description = "The username for the database"
-  default     = "admin"
-}
-
-variable "db_password" {
-  description = "The password for the database"
-  default     = "admin1234"
-}
-
-output "rds_endpoint" {
-  value = aws_db_instance.default.endpoint
 }
