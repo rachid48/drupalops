@@ -1,56 +1,54 @@
 # Terraform Drupal Infrastructure
 
-Infrastructure Terraform pour déployer une application Drupal sur AWS avec un module compute et un module RDS.
+Terraform infrastructure to deploy a Drupal application on AWS using a compute module and an RDS module.
 
 ## Structure
 
-- `main.tf` : appel des modules core et ressource `aws_security_group.web`
-- `network.tf` : VPC, subnets publics/privés, Internet Gateway, route table, DB subnet group
-- `providers.tf` : configuration des versions Terraform et du provider AWS
-- `variables.tf` : variables globales du projet
-- `outputs.tf` : outputs globaux du projet
-- `drupal-app-user-data-serv.sh` : script `user_data` séparé pour l’instance web
-- `modules/compute/` : module pour l’instance EC2 web
-- `modules/rds/` : module pour la base de données RDS
+- `main.tf`: module calls and `aws_security_group.web` resource
+- `network.tf`: VPC, public/private subnets, Internet Gateway, route table, DB subnet group
+- `providers.tf`: Terraform and AWS provider version configuration
+- `variables.tf`: global project variables
+- `outputs.tf`: global outputs
+- `drupal-app-user-data-serv.sh`: separate `user_data` script for the web instance
+- `modules/compute/`: module for the web EC2 instance
+- `modules/rds/`: module for the RDS database
 
-## Prérequis
+## Prerequisites
 
 - Terraform >= 1.5.0
-- AWS CLI configuré avec des identifiants valides
-- Compte AWS dans la région `eu-west-3`
+- AWS CLI configured with valid credentials
+- AWS account in the `eu-west-3` region
 
-## Utilisation
+## Usage
 
-1. Initialiser Terraform :
+1. Initialize Terraform:
    ```bash
    terraform init
    ```
 
-2. Vérifier le plan :
+2. Preview the plan:
    ```bash
    terraform plan
    ```
 
-3. Appliquer les changements :
+3. Apply the changes:
    ```bash
    terraform apply
    ```
 
 ## Modules
 
-- `modules/compute` : gère l’instance EC2 web et reçoit `user_data` depuis la racine
-- `modules/rds` : gère l’instance RDS et le security group de la base
+- `modules/compute`: manages the web EC2 instance and receives `user_data` from the root module
+- `modules/rds`: manages the RDS instance and its security group
 
 ## Notes
 
-- Le script de configuration de Drupal est stocké dans `drupal-app-user-data-serv.sh`
-- Les variables par défaut sont définies dans `variables.tf`
-- Les versions du provider et de Terraform sont verrouillées dans `providers.tf`
+- The Drupal setup script is stored in `drupal-app-user-data-serv.sh`
+- Default variables are defined in `variables.tf`
+- Provider and Terraform versions are pinned in `providers.tf`
 
-## Suggestion de commit
-
-Commit message :
+## Suggested commit message
 
 ```
-refactor(terraform): reorganize root layout and add README
+refactor(terraform): add compute and rds modules, reorganize root structure and add README
 ```
