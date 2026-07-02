@@ -4,10 +4,20 @@ module "compute" {
   instance_type    = var.instance_type
   instance_name    = "drupal-web"
   web_sg_id        = aws_security_group.web.id
-  user_data        = file("${path.module}/drupal-app-user-data-serv.sh")
+  user_data        = templatefile("${path.module}/drupal-app-user-data-serv.sh", {
+    efs_id = module.efs.efs_id
+  })
   subnet_ids       = [aws_subnet.main.id, aws_subnet.main_2.id]
   target_group_arn = module.alb.target_group_arn
 }
+
+module "efs" {
+  source     = "./modules/efs"
+  vpc_id     = aws_vpc.main.id
+  subnet_ids = [aws_subnet.main.id, aws_subnet.main_2.id]
+  web_sg_id  = aws_security_group.web.id
+}
+
 module "rds" {
   source               = "./modules/rds"
   db_instance_class    = var.db_instance_class
