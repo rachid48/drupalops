@@ -1,32 +1,36 @@
 variable "default_ami" {
-  description = "The default AMI to use for the instance"
+  description = "AMI ID for EC2 instances (Amazon Linux 2023)"
   type        = string
-  default     = "ami-00034b0b6e2e5a27e"
 }
 
 variable "instance_type" {
-  description = "The type of instance to use"
+  description = "EC2 instance type (e.g. t3.small)"
   type        = string
   default     = "t3.small"
 }
 
-variable "subnet_id" {
-  description = "The subnet id where the instance will be launched"
+variable "instance_name" {
+  description = "Name tag applied to EC2 instances launched by ASG"
   type        = string
+  default     = "drupal-web"
 }
 
 variable "web_sg_id" {
-  description = "The security group id for the web instance"
+  description = "Security group ID attached to web EC2 instances"
   type        = string
 }
 
 variable "user_data" {
-  description = "User data script for the instance"
+  description = "Bash script executed at instance launch to install Drupal"
   type        = string
 }
 
-variable "instance_name" {
-  description = "The name tag for the instance"
+variable "subnet_ids" {
+  description = "List of public subnet IDs for ASG across multiple AZs"
+  type        = list(string)
+}
+
+variable "target_group_arn" {
+  description = "ALB target group ARN - ASG registers instances here automatically"
   type        = string
-  default     = "WebServer"
 }

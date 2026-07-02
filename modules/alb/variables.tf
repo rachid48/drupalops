@@ -10,7 +10,7 @@ variable "public_subnet_ids" {
   type        = list(string)
 }
 
-variable "instance_id" {
+/*variable "instance_id" {
   description = "EC2 instance ID to attach to target group"
   type        = string
-}
+}*/

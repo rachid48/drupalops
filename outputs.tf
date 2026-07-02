@@ -1,6 +1,6 @@
-output "public_ip" {
-  description = "Public IP address of the web instance"
-  value       = "http://${module.compute.public_ip}"
+output "alb_dns_name" {
+  description = "ALB DNS name - use this to access Drupal"
+  value       = "http://${module.alb.alb_dns_name}"
 }
 
 output "rds_endpoint" {

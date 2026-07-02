@@ -69,10 +69,3 @@ resource "aws_lb_listener" "http" {
     target_group_arn = aws_lb_target_group.drupal.arn
   }
 }
-
-# Attach EC2 instance to target group
-resource "aws_lb_target_group_attachment" "drupal" {
-  target_group_arn = aws_lb_target_group.drupal.arn
-  target_id        = var.instance_id
-  port             = 80
-}

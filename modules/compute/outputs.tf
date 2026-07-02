@@ -1,9 +1,9 @@
-output "instance_id" {
-  description = "ID of the web instance"
-  value       = aws_instance.web.id
+output "asg_name" {
+  description = "Name of the Auto Scaling Group"
+  value       = aws_autoscaling_group.web.name
 }
 
-output "public_ip" {
-  description = "Public IP address of the web instance"
-  value       = aws_instance.web.public_ip
+output "launch_template_id" {
+  description = "ID of the Launch Template used by ASG"
+  value       = aws_launch_template.web.id
 }

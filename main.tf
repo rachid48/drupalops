@@ -1,12 +1,13 @@
 module "compute" {
-  source        = "./modules/compute"
-  default_ami   = var.default_ami
-  instance_type = var.instance_type
-  subnet_id     = aws_subnet.main.id
-  web_sg_id     = aws_security_group.web.id
-  user_data     = file("${path.module}/drupal-app-user-data-serv.sh")
+  source           = "./modules/compute"
+  default_ami      = var.default_ami
+  instance_type    = var.instance_type
+  instance_name    = "drupal-web"
+  web_sg_id        = aws_security_group.web.id
+  user_data        = file("${path.module}/drupal-app-user-data-serv.sh")
+  subnet_ids       = [aws_subnet.main.id, aws_subnet.main_2.id]
+  target_group_arn = module.alb.target_group_arn
 }
-
 module "rds" {
   source               = "./modules/rds"
   db_instance_class    = var.db_instance_class
@@ -22,7 +23,6 @@ module "alb" {
   source            = "./modules/alb"
   vpc_id            = aws_vpc.main.id
   public_subnet_ids = [aws_subnet.main.id, aws_subnet.main_2.id]
-  instance_id       = module.compute.instance_id
 }
 
 resource "aws_security_group" "web" {
@@ -55,8 +55,4 @@ resource "aws_security_group" "web" {
   }
 
   tags = { Name = "web-sg" }
-}
-
-output "alb_dns_name" {
-  value = module.alb.alb_dns_name
 }
