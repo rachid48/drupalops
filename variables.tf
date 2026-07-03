@@ -33,3 +33,9 @@ variable "db_password" {
   type        = string
   default     = "admin1234"
 }
+
+variable "default_region" {
+  description = "The AWS region to deploy resources in"
+  type        = string
+  default     = "eu-west-3"
+}
