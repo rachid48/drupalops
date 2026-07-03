@@ -61,12 +61,13 @@ data "aws_iam_policy_document" "trust" {
     }
 
     # Ensures the token comes from THIS repo, on an allowed branch or PR
-    condition {
+condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = concat(
         [for branch in var.allowed_branches : "repo:${var.github_org}/${var.github_repo}:ref:refs/heads/${branch}"],
-        var.allow_pull_requests ? ["repo:${var.github_org}/${var.github_repo}:pull_request"] : []
+        var.allow_pull_requests ? ["repo:${var.github_org}/${var.github_repo}:pull_request"] : [],
+        ["repo:${var.github_org}/${var.github_repo}:environment:production"]
       )
     }
   }
@@ -126,6 +127,7 @@ resource "aws_iam_role_policy" "terraform_permissions" {
         Sid    = "InfraManagement"
         Effect = "Allow"
         Action = [
+          "autoscaling:*",
           "ec2:*",
           "rds:*",
           "elasticfilesystem:*",
