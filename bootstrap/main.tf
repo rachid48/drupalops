@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0"
+    }
   }
   # Local state for this bootstrap only — chicken-and-egg problem
 }
@@ -66,4 +70,25 @@ output "s3_bucket_name" {
 
 output "dynamodb_table_name" {
   value = aws_dynamodb_table.tfstate_lock.name
+}
+
+# ==========================================================================
+# GitHub OIDC — step 8, CI/CD authentication
+# Reuses the S3/DynamoDB resources created above directly (no need to
+# pass their ARNs as variables since they live in the same state).
+# ==========================================================================
+
+module "github_oidc" {
+  source = "./modules/github-oidc"
+
+  project_name     = "drupalops"
+  github_org       = var.github_org
+  github_repo      = var.github_repo
+  state_bucket_arn = aws_s3_bucket.tfstate.arn
+  lock_table_arn   = aws_dynamodb_table.tfstate_lock.arn
+}
+
+output "github_actions_role_arn" {
+  description = "ARN to put in GitHub Secrets as AWS_ROLE_ARN"
+  value       = module.github_oidc.role_arn
 }
