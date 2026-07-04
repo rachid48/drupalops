@@ -62,25 +62,25 @@ resource "aws_cloudfront_distribution" "drupal" {
   # Here: all static files uploaded through Drupal (images, PDFs, etc.)
   # located under /sites/*/files/*. These files never change once created,
   # so it's safe to cache them.
-  ordered_cache_behavior {
-    path_pattern            = "/sites/*/files/*"
-    allowed_methods         = ["GET", "HEAD"]
-    cached_methods           = ["GET", "HEAD"]
-    target_origin_id         = "alb-origin"
-    viewer_protocol_policy   = "redirect-to-https"
+ordered_cache_behavior {
+  path_pattern            = "/sites/*/files/*"
+  allowed_methods         = ["GET", "HEAD"]
+  cached_methods           = ["GET", "HEAD"]
+  target_origin_id        = "alb-origin"
+  viewer_protocol_policy  = "redirect-to-https"
 
-    forwarded_values {
-      query_string = false   # no need for query strings on a static file
-      cookies {
-        forward = "none"     # no need for cookies either (no session on a static file)
-      }
+  forwarded_values {
+    query_string = true
+    cookies {
+      forward = "none"
     }
-
-    min_ttl     = 0
-    default_ttl = 86400    # 86400 seconds = 1 day of default caching
-    max_ttl     = 604800   # 604800 seconds = 7 days of max caching
-    compress    = true     # CloudFront gzip-compresses files for faster delivery
   }
+
+  min_ttl     = 0
+  default_ttl = 86400
+  max_ttl     = 604800
+  compress    = true
+}
 
   # Geographic restriction: "none" = accessible from any country
   restrictions {
