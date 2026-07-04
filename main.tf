@@ -37,6 +37,11 @@ module "alb" {
   public_subnet_ids = [aws_subnet.main.id, aws_subnet.main_2.id]
 }
 
+module "cloudfront" {
+  source       = "./modules/cloudfront"
+  alb_dns_name = module.alb.alb_dns_name
+}
+
 resource "aws_security_group" "web" {
   vpc_id = aws_vpc.main.id
 
