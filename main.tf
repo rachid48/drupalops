@@ -42,6 +42,14 @@ module "cloudfront" {
   alb_dns_name = module.alb.alb_dns_name
 }
 
+module "cloudwatch" {
+  source                  = "./modules/cloudwatch"
+  asg_name                = module.compute.asg_name
+  alb_arn_suffix           = module.alb.alb_arn_suffix
+  target_group_arn_suffix = module.alb.target_group_arn_suffix
+  alarm_email              = ""
+}
+
 resource "aws_security_group" "web" {
   vpc_id = aws_vpc.main.id
 

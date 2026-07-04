@@ -16,3 +16,7 @@ output "site_url" {
   description = "URL publique du site Drupal (via CloudFront)"
   value       = "https://${module.cloudfront.cloudfront_domain_name}"
 }
+
+output "cloudwatch_dashboard_url" {
+  value = module.cloudwatch.dashboard_url
+}
