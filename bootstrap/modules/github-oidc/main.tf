@@ -122,8 +122,6 @@ resource "aws_iam_role_policy" "terraform_permissions" {
         Resource = var.lock_table_arn
       },
 {
-  # Actual infra permissions — adjust per project.
-  # DrupalOps needs: EC2, RDS, EFS, ALB, CloudFront, CloudWatch, Secrets Manager.
   Sid    = "InfraManagement"
   Effect = "Allow"
   Action = [
@@ -135,6 +133,7 @@ resource "aws_iam_role_policy" "terraform_permissions" {
     "cloudfront:*",
     "cloudwatch:*",
     "logs:*",
+    "sns:*",
     "secretsmanager:*",
     "iam:GetRole",
     "iam:PassRole",
