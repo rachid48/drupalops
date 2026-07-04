@@ -121,23 +121,33 @@ resource "aws_iam_role_policy" "terraform_permissions" {
         ]
         Resource = var.lock_table_arn
       },
-      {
-        # Actual infra permissions — adjust per project.
-        # DrupalOps needs: EC2, RDS, EFS, ALB.
-        Sid    = "InfraManagement"
-        Effect = "Allow"
-        Action = [
-          "autoscaling:*",
-          "ec2:*",
-          "rds:*",
-          "elasticfilesystem:*",
-          "elasticloadbalancing:*",
-          "iam:GetRole",
-          "iam:PassRole",
-          "iam:CreateServiceLinkedRole"
-        ]
-        Resource = "*"
-      }
+{
+  # Actual infra permissions — adjust per project.
+  # DrupalOps needs: EC2, RDS, EFS, ALB, CloudFront, CloudWatch, Secrets Manager.
+  Sid    = "InfraManagement"
+  Effect = "Allow"
+  Action = [
+    "autoscaling:*",
+    "ec2:*",
+    "rds:*",
+    "elasticfilesystem:*",
+    "elasticloadbalancing:*",
+    "cloudfront:*",
+    "cloudwatch:*",
+    "logs:*",
+    "secretsmanager:*",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:CreateRole",
+    "iam:DeleteRole",
+    "iam:PutRolePolicy",
+    "iam:DeleteRolePolicy",
+    "iam:AttachRolePolicy",
+    "iam:DetachRolePolicy",
+    "iam:CreateServiceLinkedRole"
+  ]
+  Resource = "*"
+}
     ]
   })
 }
