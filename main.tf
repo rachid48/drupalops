@@ -62,7 +62,8 @@ module "secrets" {
   project_name = var.project_name
   db_username  = var.db_username
   db_password  = var.db_password
-  db_host      = module.rds.db_endpoint
+  db_host      = module.rds.rds_endpoint
+  db_port      = module.rds.rds_port
   db_name      = var.db_name
   hash_salt    = random_id.hash_salt.hex
 }
