@@ -141,9 +141,19 @@ resource "aws_iam_role_policy" "terraform_permissions" {
     "iam:DeleteRole",
     "iam:PutRolePolicy",
     "iam:DeleteRolePolicy",
+    "iam:GetRolePolicy",
+    "iam:ListRolePolicies",
+    "iam:ListAttachedRolePolicies",
     "iam:AttachRolePolicy",
     "iam:DetachRolePolicy",
-    "iam:CreateServiceLinkedRole"
+    "iam:CreateServiceLinkedRole",
+    "iam:TagRole",
+    "iam:CreateInstanceProfile",
+    "iam:DeleteInstanceProfile",
+    "iam:GetInstanceProfile",
+    "iam:AddRoleToInstanceProfile",
+    "iam:RemoveRoleFromInstanceProfile",
+    "iam:ListInstanceProfilesForRole"
   ]
   Resource = "*"
 }

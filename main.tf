@@ -1,12 +1,12 @@
 module "compute" {
-  source           = "./modules/compute"
-  default_ami      = var.default_ami
-  instance_type    = var.instance_type
-  instance_name    = "drupal-web"
-  web_sg_id        = aws_security_group.web.id
-    iam_instance_profile_name = module.iam.instance_profile_name
+  source                    = "./modules/compute"
+  default_ami               = var.default_ami
+  instance_type             = var.instance_type
+  instance_name             = "drupal-web"
+  web_sg_id                 = aws_security_group.web.id
+  iam_instance_profile_name = module.iam.instance_profile_name
 
-  user_data        = templatefile("${path.module}/scripts/install-drupal.sh", {
+  user_data = templatefile("${path.module}/scripts/install-drupal.sh", {
     efs_id     = module.efs.efs_id
     aws_region = "eu-west-3"
     mount_efs  = file("${path.module}/scripts/mount-efs.sh")
@@ -47,9 +47,9 @@ module "cloudfront" {
 module "cloudwatch" {
   source                  = "./modules/cloudwatch"
   asg_name                = module.compute.asg_name
-  alb_arn_suffix           = module.alb.alb_arn_suffix
+  alb_arn_suffix          = module.alb.alb_arn_suffix
   target_group_arn_suffix = module.alb.target_group_arn_suffix
-  alarm_email              = ""
+  alarm_email             = ""
 }
 
 module "secrets" {

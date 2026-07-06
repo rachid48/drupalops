@@ -19,7 +19,7 @@ variable "db_instance_class" {
 variable "db_name" {
   description = "The name of the database"
   type        = string
-  }
+}
 
 variable "db_username" {
   description = "The username for the database"
@@ -29,8 +29,8 @@ variable "db_username" {
 variable "db_password" {
   description = "The password for the database"
   type        = string
-  sensitive = true
-  }
+  sensitive   = true
+}
 
 variable "default_region" {
   description = "The AWS region to deploy resources in"
