@@ -23,3 +23,8 @@ variable "db_port" {
 variable "db_name" {
   type = string
 }
+
+variable "hash_salt" {
+  type      = string
+  sensitive = true
+}
