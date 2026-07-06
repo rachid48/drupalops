@@ -4,6 +4,8 @@ module "compute" {
   instance_type    = var.instance_type
   instance_name    = "drupal-web"
   web_sg_id        = aws_security_group.web.id
+    iam_instance_profile_name = module.iam.instance_profile_name
+
   user_data        = templatefile("${path.module}/scripts/install-drupal.sh", {
     efs_id     = module.efs.efs_id
     aws_region = "eu-west-3"
@@ -48,6 +50,21 @@ module "cloudwatch" {
   alb_arn_suffix           = module.alb.alb_arn_suffix
   target_group_arn_suffix = module.alb.target_group_arn_suffix
   alarm_email              = ""
+}
+
+module "secrets" {
+  source       = "./modules/secrets"
+  project_name = var.project_name
+  db_username  = var.db_username
+  db_password  = var.db_password
+  db_host      = module.rds.rds_endpoint
+  db_name      = var.db_name
+}
+
+module "iam" {
+  source       = "./modules/iam"
+  project_name = var.project_name
+  secret_arn   = module.secrets.secret_arn
 }
 
 resource "aws_security_group" "web" {

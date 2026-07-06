@@ -4,6 +4,9 @@ resource "aws_launch_template" "web" {
   description = "Launch template for Drupal web instances managed by ASG"
   image_id      = var.default_ami
   instance_type = var.instance_type
+    iam_instance_profile {
+    name = var.iam_instance_profile_name
+  }
 
   network_interfaces {
     associate_public_ip_address = true

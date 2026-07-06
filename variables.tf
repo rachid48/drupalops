@@ -19,23 +19,25 @@ variable "db_instance_class" {
 variable "db_name" {
   description = "The name of the database"
   type        = string
-  default     = "drupaldb"
-}
+  }
 
 variable "db_username" {
   description = "The username for the database"
   type        = string
-  default     = "admin"
 }
 
 variable "db_password" {
   description = "The password for the database"
   type        = string
-  default     = "admin1234"
-}
+  sensitive = true
+  }
 
 variable "default_region" {
   description = "The AWS region to deploy resources in"
   type        = string
   default     = "eu-west-3"
+}
+variable "project_name" {
+  type    = string
+  default = "drupalops"
 }

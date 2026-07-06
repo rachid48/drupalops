@@ -34,3 +34,7 @@ variable "target_group_arn" {
   description = "ALB target group ARN - ASG registers instances here automatically"
   type        = string
 }
+variable "iam_instance_profile_name" {
+  type        = string
+  description = "IAM instance profile to attach to EC2 instances"
+}
