@@ -1,40 +1,40 @@
 # Module: iam
 
-Creates an IAM role and instance profile allowing the ASG's EC2 instances to access the RDS secret (Secrets Manager) with no static access keys.
+This module provisions an IAM role, inline policy, and instance profile for EC2 instances to retrieve the Drupal database secret from Secrets Manager.
 
 ## Why this module
 
-Least privilege principle: the role only allows `secretsmanager:GetSecretValue` on the exact secret ARN (not `*`). The instance profile is the only way to attach an IAM role to an EC2 instance (a policy can never be attached directly to an instance).
+It enforces least privilege by granting EC2 instances only `secretsmanager:GetSecretValue` on the specific secret ARN. The instance profile attaches the role to compute instances without static credentials.
 
 ## Resources created
 
-- `aws_iam_role`: role assumable only by the EC2 service (trust policy)
-- `aws_iam_role_policy`: inline policy allowing `GetSecretValue` on the target secret
-- `aws_iam_instance_profile`: wrapper attached to the launch template (`compute` module)
+- `aws_iam_role.ec2_role` — IAM role assumable by EC2 via a trust policy.
+- `aws_iam_role_policy.secrets_access` — inline policy allowing Secrets Manager access to the secret ARN.
+- `aws_iam_instance_profile.ec2_profile` — instance profile attached to the EC2 launch template.
 
 ## Inputs
 
-| Name | Type | Description |
-|---|---|---|
-| project_name | string | Project name, used to name the role and instance profile |
-| secret_arn | string | Secrets Manager ARN (provided by the `secrets` module) |
+Name | Type | Description
+--- | --- | ---
+project_name | string | Project name used to name the role, policy, and instance profile
+secret_arn | string | ARN of the Secrets Manager secret to which EC2 instances need access
 
 ## Outputs
 
-| Name | Description |
-|---|---|
-| instance_profile_name | Instance profile name, passed to the `compute` module |
+Name | Description
+--- | ---
+instance_profile_name | Name of the IAM instance profile for EC2 instances
 
 ## Example usage
 
-\`\`\`hcl
+```hcl
 module "iam" {
   source       = "./modules/iam"
   project_name = var.project_name
   secret_arn   = module.secrets.secret_arn
 }
-\`\`\`
+```
 
 ## Dependencies
 
-Depends on the `secrets` module (needs `secret_arn`). Used by the `compute` module (provides `instance_profile_name`).
+This module depends on `module.secrets` for the secret ARN. It is consumed by `module.compute` for the EC2 instance profile name.
