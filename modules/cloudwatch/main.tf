@@ -64,7 +64,7 @@ resource "aws_cloudwatch_metric_alarm" "apache_down" {
 
   metric_query {
     id          = "apache"
-    expression  = "SELECT MIN(procstat_lookup_pid_count) FROM \"DrupalOps\" WHERE AutoScalingGroupName = '${var.asg_name}' AND pattern = 'httpd'"
+    expression  = "SELECT MIN(procstat_lookup_pid_count) FROM \"DrupalOps\" WHERE AutoScalingGroupName = '${var.asg_name}' AND \"pattern\" = 'httpd'"
     period      = 60
     return_data = true
   }
