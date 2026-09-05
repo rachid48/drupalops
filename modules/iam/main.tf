@@ -13,6 +13,12 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
+# Allow EC2 instances to publish metrics and logs through CloudWatch Agent.
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
 resource "aws_iam_role_policy" "secrets_access" {
   name = "${var.project_name}-secrets-access"
   role = aws_iam_role.ec2_role.id

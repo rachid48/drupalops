@@ -1,16 +1,17 @@
 module "compute" {
-  source           = "./modules/compute"
-  default_ami      = var.default_ami
-  instance_type    = var.instance_type
-  instance_name    = "drupal-web"
-  web_sg_id        = aws_security_group.web.id
+  source                    = "./modules/compute"
+  default_ami               = var.default_ami
+  instance_type             = var.instance_type
+  instance_name             = "drupal-web"
+  web_sg_id                 = aws_security_group.web.id
   iam_instance_profile_name = module.iam.instance_profile_name
 
-  user_data        = templatefile("${path.module}/scripts/install-drupal.sh", {
-    efs_id      = module.efs.efs_id
-    aws_region  = "eu-west-3"
-    mount_efs   = file("${path.module}/scripts/mount-efs.sh")
-    secret_name = "drupalops-db-credentials"
+  user_data = templatefile("${path.module}/scripts/install-drupal.sh", {
+    efs_id            = module.efs.efs_id
+    aws_region        = "eu-west-3"
+    mount_efs         = file("${path.module}/scripts/mount-efs.sh")
+    secret_name       = "drupalops-db-credentials"
+    cloudwatch_config = file("${path.module}/config/cloudwatch-agent.json")
   })
   subnet_ids       = [aws_subnet.main.id, aws_subnet.main_2.id]
   target_group_arn = module.alb.target_group_arn

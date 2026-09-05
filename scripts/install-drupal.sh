@@ -6,7 +6,13 @@ export COMPOSER_ALLOW_SUPERUSER=1
 # Update system and install required packages
 dnf update -y
 dnf install -y httpd php php-cli php-fpm php-mysqlnd php-xml php-mbstring \
-  php-curl php-gd php-zip php-bcmath unzip git aws-cli jq mariadb105
+  php-curl php-gd php-zip php-bcmath unzip git aws-cli jq mariadb105 \
+  amazon-cloudwatch-agent
+
+# Install the CloudWatch Agent configuration delivered by Terraform user data.
+cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<'EOCWCONFIG'
+${cloudwatch_config}
+EOCWCONFIG
 
 # Install Composer
 curl -sS https://getcomposer.org/installer | php
@@ -116,3 +122,11 @@ fi
 # === START APACHE ===
 systemctl enable httpd
 systemctl restart httpd
+
+# Start infrastructure metrics and Apache/cloud-init log collection.
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  -s
+systemctl enable amazon-cloudwatch-agent
