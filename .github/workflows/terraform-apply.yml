@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - '**.tf'
+      - 'scripts/aws_health_check.py'
+      - 'requirements.txt'
       - '.github/workflows/terraform-*.yml'
 
 permissions:
@@ -44,3 +46,10 @@ jobs:
           TF_VAR_db_username: ${{ secrets.TF_DB_USERNAME }}
           TF_VAR_db_name: ${{ secrets.TF_DB_NAME }}
           TF_VAR_db_password: ${{ secrets.TF_DB_PASSWORD }}
+
+      # Validate the deployed ASG, ALB targets, and CloudWatch alarms.
+      - name: Install Python dependencies
+        run: python3 -m pip install --requirement requirements.txt
+
+      - name: AWS Health Check
+        run: python3 scripts/aws_health_check.py --attempts 10 --interval 30
